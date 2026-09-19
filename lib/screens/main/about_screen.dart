@@ -8,6 +8,23 @@ import '../../widgets/settings_tile.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
+  void _showComingSoonModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.white,
+        title: Text('Tez orada qo\'shiladi', style: AppTextStyles.h4),
+        content: Text('Bu xususiyat tez orada ishga tushirilyadi. Kuting!', style: AppTextStyles.body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,20 +78,20 @@ class AboutScreen extends StatelessWidget {
                   SettingsTile(
                     icon: Icons.description_outlined,
                     title: 'Foydalanish shartlari',
-                    onTap: () {},
+                    onTap: () => _showComingSoonModal(context),
                   ),
                   const Divider(height: 1),
                   SettingsTile(
                     icon: Icons.privacy_tip_outlined,
                     title: 'Maxfiylik siyosati',
-                    onTap: () {},
+                    onTap: () => _showComingSoonModal(context),
                   ),
                   const Divider(height: 1),
                   SettingsTile(
                     icon: Icons.star_outline_rounded,
                     iconColor: AppColors.gold,
                     title: 'Ilovani baholash',
-                    onTap: () {},
+                    onTap: () => _showComingSoonModal(context),
                   ),
                 ],
               ),

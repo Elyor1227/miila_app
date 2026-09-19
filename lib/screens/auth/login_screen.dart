@@ -162,14 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 10),
             Text(_error!, style: AppTextStyles.caption.copyWith(color: Colors.red)),
           ],
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed('/forgot-password'),
-              child: Text('Parolni unutdingizmi?', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.pink)),
-            ),
-          ),
         ],
       ),
     );
