@@ -76,6 +76,101 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return _DayType.none;
   }
 
+  Future<void> _showCreateCycleDialog() async {
+    final startDateController = TextEditingController();
+    final cycleLengthController = TextEditingController(text: '28');
+    final notesController = TextEditingController();
+    DateTime? selectedDate;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.white,
+        title: Text('Yangi sikl qo\'shish', style: AppTextStyles.h4),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: startDateController,
+                decoration: InputDecoration(
+                  labelText: 'Hayz boshlangan sana',
+                  hintText: 'YYYY-MM-DD',
+                  border: const OutlineInputBorder(),
+                ),
+                readOnly: true,
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    selectedDate = picked;
+                    startDateController.text = picked.toString().split(' ')[0];
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: cycleLengthController,
+                decoration: const InputDecoration(
+                  labelText: 'Sikl uzunligi (kun)',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: notesController,
+                decoration: const InputDecoration(
+                  labelText: 'Eslatma (ixtiyoriy)',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Bekor qilish'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (selectedDate == null || cycleLengthController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sana va sikl uzunligini to\'ldiring')),
+                );
+                return;
+              }
+              try {
+                await _trackerService.createCycle(
+                  startDate: selectedDate!,
+                  cycleLength: int.parse(cycleLengthController.text),
+                  notes: notesController.text.trim(),
+                );
+                if (!mounted) return;
+                Navigator.pop(context);
+                _load();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sikl qo\'shildi ✓')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Xato: ${e.toString()}')),
+                );
+              }
+            },
+            child: const Text('Qo\'shish'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final firstWeekday = DateTime(_month.year, _month.month, 1).weekday;
@@ -97,7 +192,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Kalendar', style: AppTextStyles.h2),
-                  _iconCircle(Icons.settings_outlined),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed('/notification-settings'),
+                    child: _iconCircle(Icons.settings_outlined),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -111,12 +209,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
               const SizedBox(height: 12),
               _buildForecast(),
               const SizedBox(height: 20),
-              PrimaryButton(
-                label: 'Belgi qo\'shish',
-                showArrow: false,
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const SymptomEntryScreen()),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryButton(
+                      label: 'Sikl qo\'shish',
+                      showArrow: false,
+                      onPressed: _showCreateCycleDialog,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      label: 'Belgi qo\'shish',
+                      showArrow: false,
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const SymptomEntryScreen()),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
