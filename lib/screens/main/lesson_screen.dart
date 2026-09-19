@@ -7,6 +7,7 @@ import '../../services/courses_service.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/enhanced_video_player.dart';
 import 'quiz_screen.dart';
 
 /// M-05 — Video dars (real /courses/:id/lessons/:id'ga ulangan)
@@ -142,31 +143,7 @@ class _LessonScreenState extends State<LessonScreen> {
                   AspectRatio(
                     aspectRatio: 16 / 9,
                     child: _videoReady && _video != null
-                        ? Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              VideoPlayer(_video!),
-                              if (!_video!.value.isPlaying)
-                                InkWell(
-                                  onTap: () => setState(() => _video!.play()),
-                                  child: Container(
-                                    width: 64,
-                                    height: 64,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.9),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(Icons.play_arrow_rounded,
-                                        size: 36, color: Color(0xFF3D2E52)),
-                                  ),
-                                )
-                              else
-                                GestureDetector(
-                                  onTap: () => setState(() => _video!.pause()),
-                                  child: Container(color: Colors.transparent),
-                                ),
-                            ],
-                          )
+                        ? EnhancedVideoPlayer(controller: _video!, autoPlay: true)
                         : Center(
                             child: Container(
                               width: 64,
@@ -180,21 +157,7 @@ class _LessonScreenState extends State<LessonScreen> {
                             ),
                           ),
                   ),
-                  if (_videoReady && _video != null)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-                      child: VideoProgressIndicator(
-                        _video!,
-                        allowScrubbing: true,
-                        colors: const VideoProgressColors(
-                          playedColor: AppColors.pink,
-                          bufferedColor: Colors.white38,
-                          backgroundColor: Colors.white24,
-                        ),
-                      ),
-                    )
-                  else
-                    const SizedBox(height: 12),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
