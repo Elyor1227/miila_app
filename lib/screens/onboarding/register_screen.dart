@@ -68,7 +68,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _error = null;
     });
     try {
-      // Eski (to'g'ridan-to'g'ri) logika — SMS kod yuborilmaydi
       await context.read<AuthProvider>().register(
             name: name,
             email: email,

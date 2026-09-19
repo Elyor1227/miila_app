@@ -56,6 +56,7 @@ class MiilaApp extends StatelessWidget {
           '/onboarding': (context) => const OnboardingCarouselScreen(),
           '/register': (context) => const RegisterScreen(),
           '/sms-verify': (context) => const SmsVerifyScreen(),
+          '/phone-form': (context) => const PhoneFormScreen(),
           '/age': (context) => const AgeScreen(),
           '/last-period': (context) => const LastPeriodScreen(),
           '/cycle-length': (context) => const CycleLengthScreen(),

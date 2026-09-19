@@ -45,7 +45,7 @@ class _OnboardingCarouselScreenState extends State<OnboardingCarouselScreen> {
 
   void _next() {
     if (_index == _slides.length - 1) {
-      Navigator.of(context).pushNamed('/register');
+      Navigator.of(context).pushNamed('/login');
     } else {
       _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }

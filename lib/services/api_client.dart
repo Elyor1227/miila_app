@@ -24,7 +24,7 @@ class ApiClient {
 
   static const String baseUrl = String.fromEnvironment(
     'API_BASE',
-    defaultValue: 'http://localhost:5000/api',
+    defaultValue: 'https://porla-backend-cg4r.onrender.com/api',
   );
 
   static const _tokenKey = 'auth_token';
